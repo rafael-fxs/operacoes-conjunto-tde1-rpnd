@@ -1,4 +1,4 @@
-## TDE1 - Projeto de Operações com Conjuntos em Python
+## TDE1 - Projeto de Operações com Conjuntos
 Aluno: Rafael Felipe Xavier da Silva
 
 Curso: 6º Período BSI
