@@ -1,7 +1,8 @@
 # Aluno: Rafael Felipe Xavier da Silva
-# Curso: 6 Período BSI
+# Curso: 6º Período BSI
 # Matéria: Resolução de Problemas de Natureza Discreta
 
+## ENUNCIADO
 # Para obter os pontos relativos a este trabalho, você deverá criar um programa, utilizando a
 # linguagem Python, C, ou C++. Este programa, quando executado, irá apresentar os resultados de
 # operações que serão realizadas entre dois conjuntos de dados.
@@ -49,6 +50,7 @@
 # no mínimo um arquivo de testes criado pelo próprio professor. 
 
 def ler_arquivo(caminho):
+    print()
     try:
         caminho = caminho if caminho.endswith(".txt") else caminho + ".txt"
         with open(caminho, "r") as arquivo:
@@ -90,7 +92,7 @@ def executar_operacao(tipo, a, b):
         case "C":
             efetuar_produto_cartesiano(a, b)
         case _:
-            print("Tipo de operação desconhecido.")
+            print("Tipo de operação desconhecida.")
             
 def efetuar_uniao(a, b):
     resultado = remover_duplicados(a + b)
