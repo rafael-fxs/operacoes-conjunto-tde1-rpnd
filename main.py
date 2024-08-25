@@ -1,5 +1,6 @@
 # Aluno: Rafael Felipe Xavier da Silva
 # Curso: 6 Período BSI
+# Matéria: Resolução de Problemas de Natureza Discreta
 
 # Para obter os pontos relativos a este trabalho, você deverá criar um programa, utilizando a
 # linguagem Python, C, ou C++. Este programa, quando executado, irá apresentar os resultados de
@@ -47,13 +48,11 @@
 # Observe que o professor irá testar seu programa com os arquivos de testes que você criar e com,
 # no mínimo um arquivo de testes criado pelo próprio professor. 
 
-linhas_arquivo = ""
-
 def ler_arquivo(caminho):
-    global linhas_arquivo
     try:
+        caminho = caminho if caminho.endswith(".txt") else caminho + ".txt"
         with open(caminho, "r") as arquivo:
-           linhas_arquivo = arquivo.readlines()
+           return arquivo.readlines()
     except FileNotFoundError:
         print("Não foi possível encontrar o arquivo!")
         exit()
@@ -64,57 +63,13 @@ def processar_operacoes(linhas):
     for i in range(total_operacoes):
         index = i * 3
         tipo = linhas[index].strip()
-        a = limpar_converter(linhas[index + 1].split(','))
-        b = limpar_converter(linhas[index + 2].split(','))
-        print(tipo)
+        a = limpar_converter(linhas[index + 1])
+        b = limpar_converter(linhas[index + 2])
         executar_operacao(tipo, a, b)
-        
-def executar_operacao(tipo, a, b):
-    match tipo:
-        case "U":
-            operacao_uniao(a, b)
-        case "I":
-            operacao_intersecao(a, b)
-        case "D":
-            operacao_diferenca(a, b)
-        case "C":
-            operacao_uniao(a, b)
-        case _:
-            print("Tipo de operação desconhecido.")
-            
-def operacao_uniao(a, b):
-    resultado = remove_duplicados(a + b)
-    imprimir_resultado("União", a, b, resultado)
-    
-def operacao_intersecao(a, b):
-    resultado = []
-    for elementoA in a:
-        for elementoB in b:
-            if (elementoA == elementoB):
-                resultado.append(elementoA)
-    resultado = remove_duplicados(resultado)
-    imprimir_resultado("Interseção", a, b, resultado)
-    
-def operacao_diferenca(a, b):
-    resultado = []
-    for elementoA in a:
-        existe = False
-        for elementoB in b:
-            if (elementoA == elementoB):
-                existe = True
-                break
-        if not existe:
-            resultado.append(elementoA)
-            
-    resultado = remove_duplicados(resultado)
-    imprimir_resultado("Diferenca", a, b, resultado)
-    
-def remove_duplicados(lista):
-    return list(dict.fromkeys(lista))
     
 def limpar_converter(lista):
     resultado = []
-    for item in lista:
+    for item in lista.split(','):
         item = item.strip()
         if item.isdigit():
             resultado.append(int(item)) 
@@ -123,11 +78,50 @@ def limpar_converter(lista):
         else:
             resultado.append(item)
     return resultado
+        
+def executar_operacao(tipo, a, b):
+    match tipo:
+        case "U":
+            efetuar_uniao(a, b)
+        case "I":
+            efetuar_intersecao(a, b)
+        case "D":
+            efetuar_diferenca(a, b)
+        case "C":
+            efetuar_produto_cartesiano(a, b)
+        case _:
+            print("Tipo de operação desconhecido.")
+            
+def efetuar_uniao(a, b):
+    resultado = remover_duplicados(a + b)
+    imprimir_resultado("União", a, b, resultado)
+    
+def efetuar_intersecao(a, b):
+    resultado = remover_duplicados([elemento for elemento in a if elemento in b])
+    imprimir_resultado("Interseção", a, b, resultado)
+    
+def efetuar_diferenca(a, b):
+    resultado = remover_duplicados([elemento for elemento in a if elemento not in b])
+    imprimir_resultado("Diferença", a, b, resultado)
+    
+def efetuar_produto_cartesiano(a, b):
+    resultado = remover_duplicados([(x, y) for x in a for y in b])
+    imprimir_resultado("Produto Cartesiano", a, b, resultado)
+    
+def remover_duplicados(lista):
+    return list(dict.fromkeys(lista))
     
 def imprimir_resultado(tipo, a , b, resultado):
-    print(f"{tipo}: conjunto 1 {set(a)}, conjunto 2 {set(b)}. Resultado: {set(resultado)} ")
-        
-print("####### TDE #######")
-arquivo = input("Digite o nome do arquivo para leitura:\nObs: incluir o formato.\n")
-ler_arquivo(arquivo)
+    print(f"{tipo}: conjunto 1 {formatar_conjunto(a)}, conjunto 2 {formatar_conjunto(b)}. Resultado: {formatar_conjunto(resultado)}".replace("'", ""))
+
+def formatar_conjunto(conjunto):
+    if not conjunto:
+        return {}
+    if isinstance(next(iter(conjunto)), tuple):
+        return '{' + ', '.join(str(tupla) for tupla in conjunto) + '}'
+    else:
+        return '{' + ', '.join(map(str, conjunto)) + '}' 
+           
+arquivo = input("Digite o nome do arquivo para leitura: ")
+linhas_arquivo = ler_arquivo(arquivo)
 processar_operacoes(linhas_arquivo)
